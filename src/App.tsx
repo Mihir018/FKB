@@ -12,7 +12,7 @@ enum BeaconConnection {
   LISTENING = "Listening to P2P channel",
   CONNECTED = "Channel connected",
   PERMISSION_REQUEST_SENT = "Permission request sent, waiting for response",
-  PERMISSION_REQUEST_SUCCESS = "Wallet is connected"
+  PERMISSION_REQUEST_SUCCESS = "Wallet is connected",
 }
 
 const App = () => {
