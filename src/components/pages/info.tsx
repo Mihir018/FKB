@@ -7,7 +7,7 @@ const info = () => {
         <div className="front__info--card__typo">
           If you wish to drive car with your cool avatars do visit
         </div>
-        <a href="#" className="front__info--card__link">
+        <a href="https://dreamcar.fun/" className="front__info--card__link">
           Dreamcar.fun
         </a>
       </div>
