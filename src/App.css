@@ -5,6 +5,7 @@
 }
 body {
   font-family: "Raleway", sans-serif;
+  background-color: rgba(0, 0, 0, 0.781);
 }
 .front {
   width: 90%;
@@ -51,7 +52,7 @@ body {
 .front__header--typo__sub-heading {
   font-size: 2.5rem;
   margin: 1rem auto;
-  color: #777;
+  color: #f7f7f7;
 }
 .logo {
   width: 70%;
@@ -74,7 +75,7 @@ body {
 }
 .front__mint-token--typo {
   font-size: 3rem;
-  color: #777;
+  color: #f7f7f7;
 }
 .front__mint-token__btn {
   margin: 4rem auto;
@@ -116,10 +117,11 @@ body {
   font-size: 3rem;
   margin: 1rem 0;
   font-weight: 700;
+  color: #f7f7f7;
 }
 .front__about--container__left--para {
   font-size: 2rem;
-  color: #777;
+  color: #f1f1f1;
 }
 .front__about--container__right {
   flex: 1;
@@ -145,16 +147,36 @@ body {
 }
 .front__info--card {
   padding: 1rem 3rem;
-  border: 2px solid gray;
+  border-radius: 5px;
+  border: none;
+  background: rgb(82, 14, 214);
+  background: linear-gradient(
+    45deg,
+    rgba(82, 14, 214, 1) 0%,
+    rgba(189, 57, 230, 1) 58%,
+    rgba(250, 69, 250, 1) 100%
+  );
+  box-shadow: 0.2rem 0.2rem 1rem rgba(189, 57, 230, 1);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
 }
 .front__info--card__typo {
-  font-size: 1.2rem;
+  font-size: 2rem;
+  font-weight: bold;
   margin: 2rem 0;
+  color: #fff;
 }
 .front__info--card__link {
   font-size: 2rem;
+  color: #fff;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+.front__info--card__link:hover {
+  transform: translateY(-5px) scale(1.2);
+}
+.front__info--card__link:active {
+  transform: scale(0.8);
 }
