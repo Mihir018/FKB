@@ -112,23 +112,11 @@ const ConnectButton = ({
   }, []);
 
   return (
-    <div className="buttons">
-      <button className="button" onClick={connectWallet}>
+    <div className="front__mint-token__btn">
+      <button className="mint-btn" onClick={connectWallet}>
         <span>
-          <i className="fas fa-wallet"></i>&nbsp; Connect with wallet
+          <i className="fas fa-wallet"></i>&nbsp; Connect Wallet
         </span>
-      </button>
-      <button className="button" disabled={loadingNano} onClick={connectNano}>
-        {loadingNano ? (
-          <span>
-            <i className="fas fa-spinner fa-spin"></i>&nbsp; Loading, please
-            wait
-          </span>
-        ) : (
-          <span>
-            <i className="fab fa-usb"></i>&nbsp; Connect with Ledger Nano
-          </span>
-        )}
       </button>
     </div>
   );

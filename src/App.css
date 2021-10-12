@@ -76,9 +76,10 @@ body {
 .front__mint-token--typo {
   font-size: 3rem;
   color: #f7f7f7;
+  margin: 10rem auto 5rem auto;
 }
 .front__mint-token__btn {
-  margin: 4rem auto;
+  margin: 2rem auto;
   display: flex;
 }
 .mint-btn {
@@ -180,3 +181,4 @@ body {
 .front__info--card__link:active {
   transform: scale(0.8);
 }
+
