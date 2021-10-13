@@ -24,21 +24,21 @@ const MintToken = () => {
     <div className="front__mint-token">
       <div>
         <div className="front__mint-token--typo">
-          There are 1337 FKB avatars ready for you, so grab it and be in the
-          list of early buyers
+          1337 Fuckboy characters will be available for minting! Rarity, hidden
+          items, and character changes coming!!!
         </div>
         <ConnectButton
-            Tezos={Tezos}
-            setContract={setContract}
-            setPublicToken={setPublicToken}
-            setWallet={setWallet}
-            setUserAddress={setUserAddress}
-            setUserBalance={setUserBalance}
-            setStorage={setStorage}
-            contractAddress={contractAddress}
-            setBeaconConnection={setBeaconConnection}
-            wallet={wallet}
-          />
+          Tezos={Tezos}
+          setContract={setContract}
+          setPublicToken={setPublicToken}
+          setWallet={setWallet}
+          setUserAddress={setUserAddress}
+          setUserBalance={setUserBalance}
+          setStorage={setStorage}
+          contractAddress={contractAddress}
+          setBeaconConnection={setBeaconConnection}
+          wallet={wallet}
+        />
         <div className="front__mint-token__btn">
           <div className="mint-btn">Mint</div>
         </div>

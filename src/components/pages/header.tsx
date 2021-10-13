@@ -8,7 +8,7 @@ const header = () => {
       <div className="front__header--typo">
         <div className="front__header--typo__heading">FKB Production</div>
         <div className="front__header--typo__sub-heading">
-          Stake your official FKB parts and grab your avatar
+          Stake your official FKB Gear to change your Fuckboy!
         </div>
       </div>
       <div className="front__header--images">

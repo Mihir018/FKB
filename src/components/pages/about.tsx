@@ -9,19 +9,19 @@ const about = () => {
       <div className="front__about--container">
         <div className="front__about--container__left">
           <div className="front__about--container__left--heading">
-            What are this parts?
+            What is FKB Gear?
           </div>
           <div className="front__about--container__left--para">
-            A wardrobe full of different NFT sets of lidz, kix and shoes
-            designed by FKB team which you can stake here and get your exclusive
-            avatar out of it.
+            A wardrobe full of different NFT's designed by FKB! Lidz, Kix, and
+            Skinz will be available for staking and will change the appearance
+            of your Fuckboy!
           </div>
           <div className="front__about--container__left--heading">Features</div>
           <div className="front__about--container__left--para">
-            You can stake the parts into this platform and you will be provided
-            an avatar made up of this parts which you can trade.
-            <br /> V2 of this gear will be also be out shortly after the avatar
-            release.
+            You will be able to stake and unstake the different FKB Gear on your
+            Fuckboy within this platform. Get a matching set and change the
+            character completely or unlock a hidden accessory! V2 of the FKB
+            gear will be available shortly after Fuckboy launch!
           </div>
         </div>
         <div className="front__about--container__right">

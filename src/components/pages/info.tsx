@@ -5,7 +5,8 @@ const info = () => {
     <div className="front__info">
       <div className="front__info--card">
         <div className="front__info--card__typo">
-          If you wish to drive car with your cool avatars do visit
+          Fuckboy Characters will be usable in DreamCar Racing! V2 of avatar
+          will be released after DreamCar Racing!
         </div>
         <a
           href="https://dreamcar.fun/"
