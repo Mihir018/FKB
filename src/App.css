@@ -34,8 +34,10 @@ body {
 .front__header--typo__heading {
   font-size: 5rem;
   font-weight: 700;
-  text-decoration: underline;
+}
+.gradient-text {
   display: inline-block;
+  font-weight: 700;
   background-image: linear-gradient(
     108deg,
     #b16cea 8%,
@@ -181,4 +183,33 @@ body {
 }
 .front__info--card__link:active {
   transform: scale(0.8);
+}
+
+.footer {
+  background-color: black;
+  margin-top: 10rem;
+}
+.footer__container {
+  width: 90%;
+  margin: 0 auto;
+  padding: 1rem 0 0.5rem 0;
+}
+.footer__container--title {
+  font-size: 1.5rem;
+  color: white;
+  font-weight: 700;
+}
+.footer__container--img-container {
+  display: flex;
+  width: 15%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+.social-img {
+  width: 2rem;
+  transition: all 0.2s;
+}
+.social-img:hover {
+  transform: scale(1.2);
 }

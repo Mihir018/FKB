@@ -6,7 +6,9 @@ const header = () => {
   return (
     <div className="front__header">
       <div className="front__header--typo">
-        <div className="front__header--typo__heading">FKB Production</div>
+        <div className="front__header--typo__heading gradient-text">
+          FKB Production
+        </div>
         <div className="front__header--typo__sub-heading">
           Stake your official FKB Gear to change your Fuckboy!
         </div>
