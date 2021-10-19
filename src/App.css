@@ -12,15 +12,21 @@ body {
   margin: 0 auto;
 }
 .front__header {
-  margin: 5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 1.5rem;
   height: 80vh;
   width: 100%;
-  text-align: center;
+  
 }
 .front__header--images {
-  text-align: center;
   display: flex;
+  
   align-items: center;
+  margin: -1.5rem 0rem;
 }
 .front__header-first {
   flex: 1;
@@ -29,7 +35,10 @@ body {
   flex: 1;
 }
 .front__header--typo {
-  margin: 10rem auto;
+
+  margin: 15rem 0rem ;
+  
+  padding: 2.5rem;
 }
 .front__header--typo__heading {
   font-size: 5rem;
@@ -66,19 +75,22 @@ body {
   box-shadow: 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.37);
 }
 .front__mint-token {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 35em;
+  padding: 2rem;
   font-size: 1.2rem;
   text-align: center;
   width: 100%;
-  margin: 5rem auto;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 80%;
+  
 }
 .front__mint-token--typo {
   font-size: 3rem;
   color: #f7f7f7;
-  margin: 10rem auto 5rem auto;
+  margin: 6rem auto 5.5rem auto;
 }
 .front__mint-token__btn {
   margin: 2rem auto;
@@ -106,12 +118,17 @@ body {
   transform: translateY(0px);
 }
 .front__about {
+  margin-top: 7rem;
   height: 100vh;
+  padding: 2.5px;
 }
 .front__about--container {
   display: flex;
+  /*flex-direction: column;*/
   align-items: center;
+  
 }
+
 .front__about--container__left {
   flex: 1;
   padding-right: 1rem;
@@ -146,7 +163,10 @@ body {
   box-shadow: 0.2rem 0.2rem 1rem rgba(0, 0, 0, 0.37);
 }
 .front__info {
-  margin: 2rem auto;
+ 
+  margin-top: 6rem ;
+  padding: 14px;
+  justify-content: center;
 }
 .front__info--card {
   padding: 1rem 3rem;
@@ -166,6 +186,7 @@ body {
   justify-content: space-evenly;
 }
 .front__info--card__typo {
+  display: flex;
   font-size: 2rem;
   text-align: center;
   font-weight: bold;
@@ -212,4 +233,72 @@ body {
 }
 .social-img:hover {
   transform: scale(1.2);
+}
+
+@media only screen and (max-width:620px) {
+  .front__header--images{
+    display: flex;
+    flex-direction: column;
+    margin-top: -8.3rem;
+    padding: 4px;
+  }
+  
+}
+
+@media only screen and (max-width: 650px)  {
+  .front__about--container {
+    flex-direction: column;
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+     
+  }
+  .front__about--container__right{
+    margin-top: 2rem;
+    margin-bottom: 2.3rem;
+  }
+
+}
+@media only screen and (min-width:480px) and (max-width:720px)  and (-webkit-min-device-pixel-ratio: 2) {
+  
+  .front__info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 38rem ;
+    padding: 14px;
+    
+  }
+  
+}
+@media only screen and (min-width:180px) and (max-width:480px)  and (-webkit-min-device-pixel-ratio: 2) {
+  
+  .front__info {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50rem ;
+    padding: 14px;
+    
+  }
+  
+}
+@media only screen and (min-width:720px){
+  
+  .front__info {
+    flex-direction: column;
+    margin-top: 14rem 0rem ;
+    padding: 2rem;
+    
+  }
+  
+}
+
+@media only screen and (max-width: 720px)  {
+.front__mint-token--typo {
+  
+  display: flex;
+  margin-top:14rem;
+
+  
+}
+
 }
