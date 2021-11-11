@@ -1,14 +1,14 @@
 import smartpy as sp
 
 class FA2ErrorMessage:
-    PREFIX                  = "FA2 : "
+    PREFIX                  = "FA2: "
     TOKEN_UNDEFINED         = "{}TOKEN_UNDEFINED".format(PREFIX)
     INSUFFICIENT_BALANCE    = "{}INSUFFICIENT_BALANCE".format(PREFIX)
     NOT_OWNER               = "{}NOT_OWNER".format(PREFIX)
     OPERATORS_UNSUPPORTED   = "{}OPERATORS_UNSUPPORTED".format(PREFIX)
 
 class FKBErrorMessage:
-    PREFIX                              = "FKB : "
+    PREFIX                              = "FKB: "
     CANT_MINT_SAME_TOKEN_TWICE          = "{}CANT_MINT_SAME_TOKEN_TWICE".format(PREFIX)
     CONTRACT_IS_NOT_ACTIVE              = "{}CONTRACT_IS_NOT_ACTIVE".format(PREFIX)
     MIN_VALUE_SHOULD_BE_MORE_THAN_ZERO  = "{}MIN_VALUE_SHOULD_BE_MORE_THAN_ZERO".format(PREFIX)
@@ -90,8 +90,8 @@ class FKB(sp.Contract):
 
     @sp.entry_point
     def set_administrator(self, params):
-        sp.verify(self.is_administrator(sp.sender),
-                  message = FA2ErrorMessage.NOT_OWNER)
+        sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
+        sp.verify(self.is_administrator(sp.sender), message = FA2ErrorMessage.NOT_OWNER)
         self.data.administrator = params
 
     def is_active(self):
@@ -99,16 +99,14 @@ class FKB(sp.Contract):
 
     @sp.entry_point
     def toggle_active(self):
-        sp.verify(self.is_administrator(sp.sender),
-                  message = FA2ErrorMessage.NOT_OWNER)
+        sp.verify(self.is_administrator(sp.sender), message = FA2ErrorMessage.NOT_OWNER)
         self.data.active = ~self.data.active
 
     @sp.entry_point
     def mint_object(self, params):
-        sp.verify(self.is_active(), FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
+        sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
         token_id = sp.len(self.data.all_tokens)
-        sp.verify(~ self.data.all_tokens.contains(token_id),
-                    message = FKBErrorMessage.CANT_MINT_SAME_TOKEN_TWICE)
+        sp.verify(~ self.data.all_tokens.contains(token_id), message = FKBErrorMessage.CANT_MINT_SAME_TOKEN_TWICE)
         new_obj = ObjectLedgerValue.make(token_id, params.object_name, params.object_type, params.object_location, sp.sender, params.object_is_shareable, params.object_amount)
         self.data.objects_ledger[token_id] = new_obj
         token_metadata_value = sp.record(
@@ -116,14 +114,14 @@ class FKB(sp.Contract):
                                     name        = params.object_name,
                                     ipfs_link   = params.object_location,
                                     owner       = sp.sender)
+        self.data.token_metadata[token_id] = token_metadata_value
         self.data.all_tokens.add(token_id)
 
     @sp.entry_point
     def mint_character(self, params):
-        sp.verify(self.is_active(), FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
+        sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
         token_id = sp.len(self.data.all_tokens)
-        sp.verify(~ self.data.all_tokens.contains(token_id),
-                    message = FKBErrorMessage.CANT_MINT_SAME_TOKEN_TWICE)
+        sp.verify(~ self.data.all_tokens.contains(token_id), message = FKBErrorMessage.CANT_MINT_SAME_TOKEN_TWICE)
         new_char = CharacterLedgerValue.make(character_id = token_id, character_name = params.character_name, character_dna = params.character_dna, character_location = params.character_location, character_owner = sp.sender, character_amount = params.character_amount)
         self.data.characters_ledger[token_id] = new_char
         token_metadata_value = sp.record(
@@ -131,6 +129,7 @@ class FKB(sp.Contract):
                                     name        = params.character_name,
                                     ipfs_link   = params.character_location,
                                     owner       = sp.sender)
+        self.data.token_metadata[token_id] = token_metadata_value
         self.data.all_tokens.add(token_id)
 
     @sp.entry_point
@@ -148,41 +147,45 @@ class FKB(sp.Contract):
         
     @sp.entry_point
     def add_to_marketplace(self, params):
+        sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
         sp.verify_equal(sp.sender, self.data.characters_ledger[params.token_id].character_owner, message = FA2ErrorMessage.NOT_OWNER)
         create_sale = sp.record(seller = sp.sender, sale_value = params.sale_value)
         self.data.marketplace[params.token_id] = create_sale
     
     @sp.entry_point
     def remove_from_marketplace(self, params):
+        sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
         sp.verify_equal(sp.sender, self.data.characters_ledger[params.token_id].character_owner, message = FA2ErrorMessage.NOT_OWNER)
         del self.data.marketplace[params.token_id]
 
     @sp.entry_point
     def buy_nft(self, params):
+        sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
         sp.verify_equal(sp.amount, self.data.marketplace[params.token_id].sale_value, message = FKBErrorMessage.INCORRECT_PURCHASE_VALUE)
-        self.data.characters_ledger[params.token_id].character_owner = params.new_owner
+        sp.send(self.data.marketplace[params.token_id].seller, sp.amount)
+        self.data.characters_ledger[params.token_id].character_owner = sp.sender
         self.data.characters_ledger[params.token_id].character_amount = sp.amount
         del self.data.marketplace[params.token_id]
+
 
 if "templates" not in __name__:
     @sp.add_test(name="FKB NFTs")
     def test():
         sc = sp.test_scenario()
         sc.h1("FKB NFT's and Marketplace")
-        sc.h2("Accounts")
+        sc.h2("Table of Contents")
+        sc.table_of_contents()
+        sc.h3("Accounts")
         admin = sp.address("tz1LXRS2zgh12gbGix6R9xSLJwfwqM9VdpPW")
         alice = sp.test_account("Alice")
         bob = sp.test_account("Bob")
         dan = sp.test_account("Dan")
-        sc.h1("NFT Contract")
-        fkb = FKB(admin = admin, metadata = "metadata")
-        sc += fkb
-        sc.h1("Table of Contents")
-        sc.table_of_contents()
-        sc.h1("Accounts")
         sc.show([alice, bob, dan])
-        sc.h1("FKB NFT Contract")
-        sc.h2("Minting Objects")
+        sc.h2("FKB: Contract")
+        fkb = FKB(  admin = admin, metadata=sp.utils.metadata_of_url("ipfs://QmfPem9QuUzbQoo2q6kfQdnx9guVaTwXUSpuN51uW995RP"))
+        sc += fkb
+        sc.h2("FKB: Tests")
+        sc.h3("Minting Objects")
         obj1 = sp.record(
                 object_name          = "Head1",
                 object_type          = "head",
@@ -224,7 +227,7 @@ if "templates" not in __name__:
         sc += fkb.mint_object(obj4).run(sender = admin, amount = obj4.object_amount)
         sc += fkb.mint_object(obj5).run(sender = admin, amount = obj5.object_amount)
         
-        sc.h2("Minting Characters")
+        sc.h3("Minting Characters")
         char1 = sp.record(
                 character_name      = "Char 1",
                 character_dna       = sp.record(
@@ -296,4 +299,14 @@ if "templates" not in __name__:
         sc += fkb.mint_character(char3).run(sender = admin, amount = char3.character_amount)
         sc += fkb.mint_character(char4).run(sender = admin, amount = char4.character_amount)
         sc += fkb.mint_character(char5).run(sender = admin, amount = char5.character_amount)
-
+        sc.h3("Add to Marketplace")
+        sc += fkb.add_to_marketplace(sp.record(token_id = 5,sale_value = sp.mutez(4343))).run(sender = admin)
+        sc += fkb.add_to_marketplace(sp.record(token_id = 6,sale_value = sp.mutez(5676))).run(sender = admin)
+        sc += fkb.add_to_marketplace(sp.record(token_id = 7,sale_value = sp.mutez(1232))).run(sender = admin)
+        sc += fkb.add_to_marketplace(sp.record(token_id = 8,sale_value = sp.mutez(6676))).run(sender = admin)
+        sc.h3("Buy NFT's")
+        sc += fkb.buy_nft(sp.record(token_id = 5)).run(sender = alice, amount = sp.mutez(4343))
+        sc.h3("Toggle Active")
+        sc += fkb.toggle_active().run(sender = admin)
+        sc.h3("Transfer Character")
+        sc += fkb.transfer_character(sp.record(token_id    = 7, new_owner   = bob.address)).run(sender = admin, valid = False)
