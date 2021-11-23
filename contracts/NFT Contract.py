@@ -1,5 +1,5 @@
 # Deployed on Granadanet Testnet
-# Address: KT1MpLbPFzeq85toa7zsZE4MXgdaUC5uYQMb ( https://better-call.dev/granadanet/KT1MpLbPFzeq85toa7zsZE4MXgdaUC5uYQMb/ )
+# Address: KT1MpLbPFzeq85toa7zsZE4MXgdaUC5uYQMb (https://better-call.dev/granadanet/KT1MpLbPFzeq85toa7zsZE4MXgdaUC5uYQMb/)
 
 import smartpy as sp
 
