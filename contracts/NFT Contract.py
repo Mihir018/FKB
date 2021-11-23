@@ -1,3 +1,6 @@
+# Deployed on Granadanet Testnet
+# Address: KT1MpLbPFzeq85toa7zsZE4MXgdaUC5uYQMb ( https://better-call.dev/granadanet/KT1MpLbPFzeq85toa7zsZE4MXgdaUC5uYQMb/ )
+
 import smartpy as sp
 
 class FA2ErrorMessage:
@@ -14,6 +17,8 @@ class FKBErrorMessage:
     MIN_VALUE_SHOULD_BE_MORE_THAN_ZERO  = "{}MIN_VALUE_SHOULD_BE_MORE_THAN_ZERO".format(PREFIX)
     INCORRECT_PURCHASE_VALUE            = "{}INCORRECT_PURCHASE_VALUE".format(PREFIX)
     OBJECT_IS_NOT_SHAREABLE             = "{}OBJECT_IS_NOT_SHAREABLE".format(PREFIX)
+    INVALID_OBJECT                      = "{}INVALID_OBJECT".format(PREFIX)
+    INVALID_CHARACTER                   = "{}INVALID_CHARACTER".format(PREFIX)
 
 
 # Declaring Object Ledger Key-Value types
@@ -37,7 +42,7 @@ class CharacterLedgerValue:
         return sp.TRecord(
             character_id        = sp.TNat, 
             character_name      = sp.TString,
-            character_dna       = sp.TRecord(
+            character_dna       = sp.TRecord( 
                     head    = sp.TNat,
                     jeans   = sp.TNat,
                     logo    = sp.TNat,
@@ -120,8 +125,15 @@ class FKB(sp.Contract):
     @sp.entry_point
     def mint_character(self, params):
         sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
+        char_dna = params.character_dna
+        sp.verify_equal(char_dna.head, self.data.objects_ledger[char_dna.head].object_id, message = FKBErrorMessage.INVALID_OBJECT)
+        sp.verify_equal(char_dna.jeans, self.data.objects_ledger[char_dna.jeans].object_id, message = FKBErrorMessage.INVALID_OBJECT)
+        sp.verify_equal(char_dna.logo, self.data.objects_ledger[char_dna.logo].object_id, message = FKBErrorMessage.INVALID_OBJECT)
+        sp.verify_equal(char_dna.shirt, self.data.objects_ledger[char_dna.shirt].object_id, message = FKBErrorMessage.INVALID_OBJECT)
+        sp.verify_equal(char_dna.shoes, self.data.objects_ledger[char_dna.shoes].object_id, message = FKBErrorMessage.INVALID_OBJECT)
         token_id = sp.len(self.data.all_tokens)
         sp.verify(~ self.data.all_tokens.contains(token_id), message = FKBErrorMessage.CANT_MINT_SAME_TOKEN_TWICE)
+
         new_char = CharacterLedgerValue.make(character_id = token_id, character_name = params.character_name, character_dna = params.character_dna, character_location = params.character_location, character_owner = sp.sender, character_amount = params.character_amount)
         self.data.characters_ledger[token_id] = new_char
         token_metadata_value = sp.record(
@@ -148,6 +160,7 @@ class FKB(sp.Contract):
     @sp.entry_point
     def add_to_marketplace(self, params):
         sp.verify(self.is_active(), message = FKBErrorMessage.CONTRACT_IS_NOT_ACTIVE)
+        sp.verify_equal(params.token_id, self.data.characters_ledger[params.token_id].character_id, message = FKBErrorMessage.INVALID_CHARACTER)
         sp.verify_equal(sp.sender, self.data.characters_ledger[params.token_id].character_owner, message = FA2ErrorMessage.NOT_OWNER)
         create_sale = sp.record(seller = sp.sender, sale_value = params.sale_value)
         self.data.marketplace[params.token_id] = create_sale
@@ -182,7 +195,7 @@ if "templates" not in __name__:
         dan = sp.test_account("Dan")
         sc.show([alice, bob, dan])
         sc.h2("FKB: Contract")
-        fkb = FKB(  admin = admin, metadata=sp.utils.metadata_of_url("ipfs://QmfPem9QuUzbQoo2q6kfQdnx9guVaTwXUSpuN51uW995RP"))
+        fkb = FKB(  admin = admin, metadata=sp.utils.metadata_of_url("ipfs://QmX53NegdyXp3Yh1VTHYwhHLpRoeide2oAwfnnj3aU5m79"))
         sc += fkb
         sc.h2("FKB: Tests")
         sc.h3("Minting Objects")
@@ -244,69 +257,25 @@ if "templates" not in __name__:
         char2 = sp.record(
                 character_name      = "Char 2",
                 character_dna       = sp.record(
-                                head    = 80,
-                                jeans   = 17,
-                                logo    = 62,
-                                shirt   = 39,
-                                shoes   = 564
+                                head    = 4,
+                                jeans   = 3,
+                                logo    = 2,
+                                shirt   = 1,
+                                shoes   = 0
                             ),
                 character_location  = "char2.locn",
                 character_amount    = sp.mutez(8764)
             )
 
-        char3 = sp.record(
-                character_name      = "Char 3",
-                character_dna       = sp.record(
-                                head    = 80,
-                                jeans   = 19,
-                                logo    = 872,
-                                shirt   = 63,
-                                shoes   = 894
-                            ),
-                character_location  = "char3.locn",
-                character_amount    = sp.mutez(3283)
-            )
-
-        char4 = sp.record(
-                character_name      = "Char 4",
-                character_dna       = sp.record(
-                                head    = 80,
-                                jeans   = 19,
-                                logo    = 8289,
-                                shirt   = 37,
-                                shoes   = 684
-                            ),
-                character_location  = "char4.locn",
-                character_amount    = sp.mutez(54895)
-            )
-
-        char5 = sp.record(
-                character_name      = "Char 5",
-                character_dna       = sp.record(
-                                head    = 5708,
-                                jeans   = 81,
-                                logo    = 27,
-                                shirt   = 8653,
-                                shoes   = 454
-                            ),
-                character_location  = "char5.locn",
-                character_amount    = sp.mutez(23244)
-            )
-
-        
         sc += fkb.mint_character(char1).run(sender = admin, amount = char1.character_amount)
         sc += fkb.mint_character(char2).run(sender = admin, amount = char2.character_amount)
-        sc += fkb.mint_character(char3).run(sender = admin, amount = char3.character_amount)
-        sc += fkb.mint_character(char4).run(sender = admin, amount = char4.character_amount)
-        sc += fkb.mint_character(char5).run(sender = admin, amount = char5.character_amount)
         sc.h3("Add to Marketplace")
         sc += fkb.add_to_marketplace(sp.record(token_id = 5,sale_value = sp.mutez(4343))).run(sender = admin)
         sc += fkb.add_to_marketplace(sp.record(token_id = 6,sale_value = sp.mutez(5676))).run(sender = admin)
-        sc += fkb.add_to_marketplace(sp.record(token_id = 7,sale_value = sp.mutez(1232))).run(sender = admin)
-        sc += fkb.add_to_marketplace(sp.record(token_id = 8,sale_value = sp.mutez(6676))).run(sender = admin)
+        sc += fkb.add_to_marketplace(sp.record(token_id = 7,sale_value = sp.mutez(1232))).run(sender = admin, valid = False)
         sc.h3("Buy NFT's")
         sc += fkb.buy_nft(sp.record(token_id = 5)).run(sender = alice, amount = sp.mutez(4343))
         sc.h3("Toggle Active")
         sc += fkb.toggle_active().run(sender = admin)
         sc.h3("Transfer Character")
-        sc += fkb.transfer_character(sp.record(token_id    = 7, new_owner   = bob.address)).run(sender = admin, valid = False)
+        sc += fkb.transfer_character(sp.record(token_id = 7, new_owner = bob.address)).run(sender = admin, valid = False)
